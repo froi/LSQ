@@ -38,6 +38,8 @@
           <th>Tags</th>
           <th>Description</th>
           <th>Person Responsible</th>
+          <th>Created</th>
+          <th>Last Update</th>
         </tr>
         <tr>
           <td>
@@ -47,6 +49,12 @@
           </td>
           <td>{{ query.desc }}</td>
           <td>{{ query.who }}</td>
+          <td>{{ query.date_created.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+          {% if query.date_updated %}
+            <td>{{ query.date_updated.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+          {% else %}
+            <td> - </td>
+          {% endif %}
         </tr>
       </table>
     </div>
