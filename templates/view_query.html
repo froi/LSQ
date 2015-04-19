@@ -4,7 +4,6 @@
 
   <link rel="stylesheet" href="/static/highlightjs/styles/railscasts.css">
   <script src="/static/highlightjs/highlight.pack.js"></script>
-  <script src="/static/markdownjs/markdown.js"></script>
   <script>hljs.initHighlightingOnLoad();</script>
 
   <style>
@@ -12,6 +11,10 @@
       background: #232323;
       border:none;
       font-family: monospace;
+    }
+    .query-desc-container {
+      border: 1px solid #ddd;
+      border-radius: 5px;
     }
     .comment-container {
       margin-bottom: 40px;
@@ -74,7 +77,7 @@
       <div class="col-md-12">
         <h1>Description</h2>
         <hr>
-        <div class="col-md-12">
+        <div class="col-md-12 query-desc-container">
           {{query.desc | safe}}
         </div>
       </div>

@@ -41,6 +41,7 @@ class Query(Document):
     }
     required_fields = ['title', 'sql', 'desc', 'who']
     use_dot_notation = True
+    use_autorefs = True
 
 
 def get_tags_list(tags):
@@ -54,7 +55,7 @@ def insert_query(title, sql, tags, desc, who):
     query.title = title
     query.sql = sql
     query.tags = get_tags_list(tags)
-    query.desc = markdown(desc)
+    query.desc = desc
     query.who = who
     query.date_created = datetime.utcnow()
     query.date_updated = datetime.utcnow()
@@ -66,7 +67,7 @@ def update_query(id, title, sql, tags, desc, who):
     query.title = title
     query.sql = sql
     query.tags = get_tags_list(tags)
-    query.desc = markdown(desc)
+    query.desc = desc
     query.who = who
     query.date_updated = datetime.utcnow()
 
@@ -79,13 +80,22 @@ def get_queries():
     return list(connection.Query.find())
 
 def get_query_details(id):
-    return connection.Query.find_one(ObjectId(id))
+    query = connection.Query.find_one(ObjectId(id))
+    query.desc = markdown(query.desc)
+    tmp_comments = []
+
+    for comment in query.comments:
+        comment.text = markdown(comment.text)
+        tmp_comments.append(comment)
+
+    query.comments = tmp_comments
+    return query
 
 def insert_comment(comment_text, who):
 
     comment = connection.Comment()
 
-    comment.text = markdown(comment_text)
+    comment.text = comment_text
     comment.who = who
     comment.date_created = datetime.utcnow()
     comment.date_updated = datetime.utcnow()
@@ -97,7 +107,7 @@ def insert_comment(comment_text, who):
 def update_comment(id, comment_text, who):
     comment = connection.Comment.find_one(ObjectId(id))
 
-    comment.text = markdown(comment_text)
+    comment.text = comment_text
     comment.who = who
     comment.date_updated = datetime.utcnow()
 
@@ -107,4 +117,11 @@ def delete_comment(id):
     connection.Comment.find_one(ObjectId(id)).delete()
 
 def get_comments():
-    return list(connection.Comment.find())
+    tmp_comments = []
+    comments = connection.Comment.find()
+
+    for comment in comments:
+        comment.text = markdown(comment.text)
+        tmp_comments.append(comment)
+
+    return tmp_comments
