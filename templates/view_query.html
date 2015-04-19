@@ -12,6 +12,34 @@
       border:none;
       font-family: monospace;
     }
+    .comment {
+      margin: 10px auto;
+      position: relative;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+      padding: 0px;
+    }
+    .comment-header {
+      padding-left: 15px;
+      padding-right: 15px;
+      color: #999;
+      background-color: #f7f7f7;
+      border-bottom: 1px solid #eee;
+      border-top-left-radius: 3px;
+      border-top-right-radius: 3px;
+    }
+    .comment-header-text {
+      max-width: 78%;
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+    .comment-txt {
+      background: #ffffff;
+      font-family: helvetica, arial, sans-serif;
+      padding-right: 15px;
+      padding-left: 15px;
+    }
   </style>
 
 {% endblock %}
@@ -66,11 +94,46 @@
     </div>
   </div>
 
+  <div class="row">
+    <h2>Add Comment</h2>
+    <hr>
+    <form action="addComment" method="POST" accept-charset="utf-8">
+      <div class="col-md-12 form-group">
+        <textarea name="comment" class="form-control"></textarea>
+      </div>
+      <div class="col-md-12 form-group">
+        <button id="addComment" class="btn btn-success form-control" type="submit">Add Comment</button>
+      </div>
+    </form>
+  </div>
+  <div class="row comment-container">
+    <h2>Comments</h2>
+    <hr>
+    {% for comment in query.comments %}
+    <div class="col-md-12 comment">
+      <div class="comment-header">
+        <div class="comment-header-text"><strong>{{ comment.who }}</strong> commented on: {{ comment.date_created }}</div>
+      </div>
+      <div class="comment-text-wrapper">
+        <pre class="comment-txt">{{ comment.comment }}</pre>
+      </div>
+      <!-- <div class="comment-detail">
+        <span>By: {{ comment.who }}</span> <span>Written on: {{ comment.date_created }}</span>
+      </div> -->
+    </div>
+    {% endfor %}
+  </div>
   <script src="/static/zeroclipboard/ZeroClipboard.min.js"></script>
 
   <script>
     $(function() {
       var client = new ZeroClipboard($("#copy-query"));
+    });
+
+    $(document).onready(function() {
+      var app = new App();
+
+      $('#addComment').click(app.addComment());
     });
   </script>
 

@@ -38,6 +38,25 @@ def query_view(id):
     query = db.get_query_details(id)
     return render_template("view_query.html", query=query)
 
+@app.route("/query/<id>/addComment", methods=["POST"])
+def add_comment(id):
+    query = db.get_query_details(id)
+    try:
+        commentText = request.form["comment"].strip()
+
+        comment = db.insert_comment(commentText, 'admin')
+
+        query.comments.append(comment)
+
+        query.save()
+
+        flash("Comment added.", category='success')
+    except Exception as e:
+        print e
+        flash("Error adding comment to query with id: {}".format(str(id)), category='error')
+        
+    return redirect(url_for("query_view", id=id))
+        
 @app.route("/query/<id>/edit/", methods=["GET", "POST"])
 def query_edit(id):
     if request.method == "GET":
