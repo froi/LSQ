@@ -36,6 +36,7 @@ def query_add():
 @app.route("/query/<id>/", methods=["GET", "DELETE"])
 def query_view(id):
     query = db.get_query_details(id)
+    
     return render_template("view_query.html", query=query)
 
 @app.route("/query/<id>/addComment", methods=["POST"])
