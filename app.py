@@ -3,7 +3,7 @@ from flask.ext.login import LoginManager, login_required, current_user, login_us
 from flask_wtf.csrf import CsrfProtect
 from flask.ext.bcrypt import Bcrypt
 
-from forms import LoginForm, RegisterForm
+from forms import LoginForm, RegisterForm, SnippetForm
 import db
 import config
 
@@ -18,8 +18,6 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-snippet_types = ['sql', 'ruby', 'python', 'bash', 'js']
-
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
@@ -30,12 +28,12 @@ def login():
             user = db.get_user(username=request.form['username'])
 
             if user is not None and bcrypt.check_password_hash(user.password, request.form['password']):
-                print user
+
                 login_user(user)
 
                 flash('You were logged in. Go Crazy.')
                 next_url = request.args.get('next')
-                return redirect(next_url or url_for('index'))
+                return redirect(next_url or url_for('home'))
             else:
                 error = 'Invalid username or password.'
         else:
@@ -67,15 +65,21 @@ def register():
 
 
 @login_manager.user_loader
-def load_user(username):
-    return db.get_user(username=username)
+def load_user(user_id):
+    return db.get_user(user_id=user_id)
 
 
 @app.route("/")
-@login_required
 def index():
+    return redirect(url_for('home'))
+
+
+@app.route("/home", methods=["GET"])
+@login_required
+def home():
+    form = SnippetForm(request.form)
     snippets = db.get_snippets()
-    return render_template("index.html", snippets=snippets, snippet_types=snippet_types)
+    return render_template("home.html", snippets=snippets, form=form)
 
 
 @login_required
@@ -83,7 +87,7 @@ def index():
 def snippet_add():
     try:
         title = request.form["title"].strip()
-        snippet_text = request.form["snippet_text"].strip()
+        snippet_text = request.form["code"].strip()
         snippet_type = request.form["snippet_type"].strip()
         tags = request.form["tags"].strip()
         desc = request.form["desc"].strip()
@@ -91,16 +95,16 @@ def snippet_add():
 
         if len(title) == 0 or len(snippet_text) == 0:
             flash("Title and Sql are required fields", "error")
-            return redirect(url_for("index"))
+            return redirect(url_for("home"))
 
         db.insert_snippet(title, snippet_text, snippet_type, tags, desc, who)
         flash("snippet Added!", "success")
-        return redirect(url_for("index"))
+        return redirect(url_for("home"))
 
     except Exception as e:
         print e
         flash("Fatal error. Contact Administrator", "error")
-        return redirect(url_for("index"))
+        return redirect(url_for("home"))
 
 
 @login_required
@@ -159,19 +163,19 @@ def snippet_edit(snippet_id):
         except Exception as e:
             print e
             flash("Fatal error. Contact Administrator", "error")
-            return redirect(url_for("index"))
+            return redirect(url_for("home"))
 
 
 @login_required
 @app.route("/snippet/<snippet_id>/delete/", methods=["GET", "POST"])
-def query_delete(snippet_id):
+def snippet_delete(snippet_id):
     if request.method == "GET":
-        snippet = db.get_query_details(snippet_id)
+        snippet = db.get_snippet_details(snippet_id)
         return render_template("delete_snippet.html", snippet=snippet)
     elif request.method == "POST":
-        db.delete_query(snippet_id)
+        db.delete_snippet(snippet_id)
         flash("Delete Successful", "success")
-        return redirect(url_for("index"))
+        return redirect(url_for("home"))
 
 if __name__ == "__main__":
     app.run(debug=config.flask_debug, port=config.flask_port, host="0.0.0.0")

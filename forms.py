@@ -1,5 +1,5 @@
 from flask_wtf import Form
-from wtforms import TextField, PasswordField
+from wtforms import TextField, PasswordField, TextAreaField, SelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo
 
 
@@ -27,3 +27,43 @@ class RegisterForm(Form):
             DataRequired(), EqualTo('password', message='Passwords must match.')
         ]
     )
+
+
+class SnippetForm(Form):
+    title = TextField('Title', validators=[DataRequired()])
+    code = TextAreaField('Code', validators=[DataRequired()])
+    desc = TextAreaField('Description')
+    snippet_type = SelectField(
+        'Type', 
+        choices=[
+            ('apache', 'Apache'),
+            ('bash', 'Bash'),
+            ('c#', 'C#'),
+            ('c++', 'C++'),
+            ('cSS', 'CSS'),
+            ('coffeeScript', 'CoffeeScript'),
+            ('diff', 'Diff'),
+            ('dockerfile', 'Dockerfile'),
+            ('go', 'Go'),
+            ('gradle', 'Gradle'),
+            ('html', 'HTML, XML'),
+            ('hTTP', 'HTTP'),
+            ('ini', 'Ini'),
+            ('jSON', 'JSON'),
+            ('java', 'Java'),
+            ('javaScript', 'JavaScript'),
+            ('lua', 'Lua'),
+            ('makefile', 'Makefile'),
+            ('markdown', 'Markdown'),
+            ('nginx', 'Nginx'),
+            ('objective C', 'Objective C'),
+            ('pHP', 'PHP'),
+            ('perl', 'Perl'),
+            ('python', 'Python'),
+            ('ruby', 'Ruby'),
+            ('sql', 'SQL'),
+            ('stylus', 'Stylus'),
+            ('swift', 'Swift'),
+        ],
+        validators=[DataRequired()])
+    tags = TextField('Tags')

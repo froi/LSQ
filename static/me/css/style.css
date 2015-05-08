@@ -1,0 +1,40 @@
+pre, code {
+  background: #232323;
+  border:none;
+  font-family: monospace;
+}
+.query-desc-container {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+.comment-container {
+  margin-bottom: 40px;
+}
+.comment {
+  margin: 10px auto;
+  position: relative;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  padding: 0px;
+}
+.comment-header {
+  padding-left: 15px;
+  padding-right: 15px;
+  color: #999;
+  background-color: #f7f7f7;
+  border-bottom: 1px solid #eee;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+}
+.comment-header-text {
+  max-width: 78%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.comment-txt {
+  background: #ffffff;
+  font-family: helvetica, arial, sans-serif;
+  padding-right: 15px;
+  padding-left: 15px;
+}
