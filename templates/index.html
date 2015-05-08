@@ -14,7 +14,7 @@
         </div>
       </div>
       <div class="col-md-1">
-        <a class="btn btn-success" data-toggle="modal" href="#add-query"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add</a>
+        <a class="btn btn-success" data-toggle="modal" href="#add-snippet"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add</a>
       </div>
     </div>
   </form>
@@ -25,7 +25,7 @@
   <div class="row">
     <div class="col-md-12">
       <div class="pull-right">
-        <a class="btn btn-primary" data-toggle="modal" href="#add-query"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add Query</a>
+        <a class="btn btn-primary" data-toggle="modal" href="#add-snippet"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add Snippet</a>
       </div>
     </div>
   </div>
@@ -39,50 +39,50 @@
           <th style="width:18%"></th>
         </tr>
         {% if queries|length > 0 %}
-          {% for query in queries %}
+          {% for snippet in snippets %}
             <tr>
-              <td>{{query.title}}</td>
+              <td>{{snippet.title}}</td>
               <td>
-              {% for tag in query.tags %}
+              {% for tag in snippet.tags %}
                 <span class="label label-default">{{tag}}</span> 
               {% endfor %}
               </td>
               <td>
-                <a href="{{ url_for("query_view", id=query._id) }}" class="btn btn-success btn-xs"><span class="glyphicon glyphicon-eye-open"></span> View</a>
-                <a href="{{ url_for("query_edit", id=query._id) }}" class="btn btn-info btn-xs"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
-                <a href="{{ url_for("query_delete", id=query._id) }}" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove"></span> Delete</a>
+                <a href="{{ url_for("snippet_view", id=snippet._id) }}" class="btn btn-success btn-xs"><span class="glyphicon glyphicon-eye-open"></span> View</a>
+                <a href="{{ url_for("snippet_edit", id=snippet._id) }}" class="btn btn-info btn-xs"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
+                <a href="{{ url_for("snippet_delete", id=snippet._id) }}" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove"></span> Delete</a>
               </td>
             </tr>
           {% endfor %}
         {% else %}
           <tr>
-            <td class="text-center" colspan=3>No Queries added yet.</td>
+            <td class="text-center" colspan=3>No Snippets added yet.</td>
           </tr>
         {% endif %}
       </table>
     </div>
   </div>
 
-  <div class="modal fade" id="add-query" tabindex="-1" role="dialog" aria-labelledby="addQuery" aria-hidden="true">
+  <div class="modal fade" id="add-snippet" tabindex="-1" role="dialog" aria-labelledby="addsnippet" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="addQueryLabel">Add Query</h4>
+          <h4 class="modal-title" id="addsnippetLabel">Add Snippet</h4>
         </div>
         <div class="modal-body">
-          <form method="POST" action="{{ url_for("query_add") }}">
+          <form method="POST" action="{{ url_for("snippet_add") }}">
 
             <div class="row">
               <div class="col-md-12">
-                <input id="add-query-title" name="title" class="form-control" placeholder="Title" type="text">
+                <input id="add-snippet-title" name="title" class="form-control" placeholder="Title" type="text">
               </div>
             </div>
             <br/>
 
             <div class="row">
               <div class="col-md-12">
-                <textarea name="sql" placeholder="SQL" id="" class="form-control" name="" cols="30" rows="10"></textarea>
+                <textarea name="code" placeholder="Code" id="" class="form-control" name="" cols="30" rows="10"></textarea>
               </div>
             </div>
             <br/>
@@ -93,10 +93,14 @@
               </div>
             </div>
             <br/>
-
             <div class="row">
               <div class="col-md-5">
-                <input name="who" class="form-control" placeholder="Person who wrote this query" type="text">
+                <!-- <input name="who" class="form-control" placeholder="Person who wrote this snippet" type="text"> -->
+                <select name="code_type" class="form-control">
+                  {% for code_type in snippet_types %}
+                  <option value="{{code_type}}">{{code_type}}</option>
+                  {% endfor %}
+                </select>
               </div>
               <div class="col-md-5">
                 <input name="tags" class="form-control" placeholder="Tags (comma separated)" type="text">
@@ -112,8 +116,8 @@
   </div>
 
   <script>
-    $('#add-query').on('shown.bs.modal', function () {
-      $('#add-query-title').focus()
+    $('#add-snippet').on('shown.bs.modal', function () {
+      $('#add-snippet-title').focus()
     })
   </script>
 

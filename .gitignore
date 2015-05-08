@@ -1,6 +1,7 @@
 # Project specific
 
 config.py
+.idea/
 
 # Created by https://www.gitignore.io
 
