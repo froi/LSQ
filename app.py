@@ -31,14 +31,14 @@ def login():
 
                 login_user(user)
 
-                flash('You were logged in. Go Crazy.')
+                flash('You were logged in. Go Crazy.', 'success')
                 next_url = request.args.get('next')
                 return redirect(next_url or url_for('home'))
             else:
-                error = 'Invalid username or password.'
+                flash('Invalid username or password.', 'error')
         else:
-            error = 'Form Invalid'
-    return render_template('login.html', form=form, error=error)
+            flash('Form Invalid', 'error')
+    return render_template('login.html', form=form)
 
 
 @app.route("/logout", methods=['GET', 'POST'])
@@ -107,16 +107,16 @@ def snippet_add():
         return redirect(url_for("home"))
 
 
-@login_required
 @app.route("/snippet/<snippet_id>/", methods=["GET", "DELETE"])
+@login_required
 def snippet_view(snippet_id):
     snippet = db.get_snippet_details(snippet_id)
 
     return render_template("view_snippet.html", snippet=snippet)
 
 
-@login_required
 @app.route("/snippet/<snippet_id>/addComment", methods=["POST"])
+@login_required
 def add_comment(snippet_id):
     snippet = db.get_snippet_details(snippet_id)
     try:
@@ -136,17 +136,18 @@ def add_comment(snippet_id):
     return redirect(url_for("snippet_view", snippet_id=snippet_id))
 
 
-@login_required
 @app.route("/snippet/<snippet_id>/edit/", methods=["GET", "POST"])
+@login_required
 def snippet_edit(snippet_id):
+    form = SnippetForm(request.form)
     if request.method == "GET":
         snippet = db.get_snippet_details(snippet_id)
-        return render_template("edit_snippet.html", snippet=snippet)
+        return render_template("edit_snippet.html", snippet=snippet, form=form)
     elif request.method == "POST":
         try:
             snippet_id = request.form["id"].strip()
             title = request.form["title"].strip()
-            snippet_text = request.form["snippet_text"].strip()
+            snippet_text = request.form["code"].strip()
             snippet_type = request.form["snippet_type"].strip()
             tags = request.form["tags"].strip()
             desc = request.form["desc"].strip()
@@ -166,8 +167,8 @@ def snippet_edit(snippet_id):
             return redirect(url_for("home"))
 
 
-@login_required
 @app.route("/snippet/<snippet_id>/delete/", methods=["GET", "POST"])
+@login_required
 def snippet_delete(snippet_id):
     if request.method == "GET":
         snippet = db.get_snippet_details(snippet_id)

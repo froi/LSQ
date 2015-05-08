@@ -1,5 +1,5 @@
 from flask_wtf import Form
-from wtforms import TextField, PasswordField, TextAreaField, SelectField
+from wtforms import TextField, PasswordField, TextAreaField, SelectField, HiddenField
 from wtforms.validators import DataRequired, Length, Email, EqualTo
 
 
@@ -30,6 +30,7 @@ class RegisterForm(Form):
 
 
 class SnippetForm(Form):
+    snippet_id = HiddenField('snippet_id')
     title = TextField('Title', validators=[DataRequired()])
     code = TextAreaField('Code', validators=[DataRequired()])
     desc = TextAreaField('Description')

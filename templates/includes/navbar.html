@@ -11,7 +11,9 @@
     </div>
     <div class="navbar-collapse collapse pull-right">
       <ul class="nav navbar-nav">
-        <li><a href="/logout">Logout</a></li>
+        {% if current_user.is_authenticated() %}
+          <li><a href="/logout">Logout</a></li>
+        {% endif %}
       </ul>
     </div>
   </div>
