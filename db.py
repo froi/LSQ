@@ -6,6 +6,7 @@ from markdown import markdown
 
 import config
 
+
 connection = Connection(host=config.mongo_hostname, port=config.mongo_port)
 
 
@@ -102,7 +103,7 @@ def insert_snippet(title, snippet_text, snippet_type, tags, desc, who):
 
 
 def update_snippet(snippet_id, title, snippet_text, snippet_type, tags, desc, who):
-    snippet = connection.snippet.find_one(ObjectId(snippet_id))
+    snippet = connection.Snippet.find_one(ObjectId(snippet_id))
 
     snippet.title = title
     snippet.text = snippet_text

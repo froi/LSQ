@@ -35,7 +35,7 @@ class SnippetForm(Form):
     code = TextAreaField('Code', validators=[DataRequired()])
     desc = TextAreaField('Description')
     snippet_type = SelectField(
-        'Type', 
+        'Type',
         choices=[
             ('apache', 'Apache'),
             ('bash', 'Bash'),

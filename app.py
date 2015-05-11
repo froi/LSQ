@@ -139,27 +139,33 @@ def add_comment(snippet_id):
 @app.route("/snippet/<snippet_id>/edit/", methods=["GET", "POST"])
 @login_required
 def snippet_edit(snippet_id):
+    print snippet_id
     form = SnippetForm(request.form)
     if request.method == "GET":
         snippet = db.get_snippet_details(snippet_id)
+        form.title.data = snippet.title
+        form.code.data = snippet.text
+        form.snippet_type.data = snippet.type
+        form.tags.data = str.join(',', snippet.tags)
+        form.desc.data = snippet.desc
+
         return render_template("edit_snippet.html", snippet=snippet, form=form)
     elif request.method == "POST":
         try:
-            snippet_id = request.form["id"].strip()
-            title = request.form["title"].strip()
-            snippet_text = request.form["code"].strip()
-            snippet_type = request.form["snippet_type"].strip()
-            tags = request.form["tags"].strip()
-            desc = request.form["desc"].strip()
-            who = current_user.username  # request.form["who"].strip()
+                title = request.form["title"].strip()
+                snippet_text = request.form["code"].strip()
+                snippet_type = request.form["snippet_type"].strip()
+                tags = request.form["tags"].strip()
+                desc = request.form["desc"].strip()
+                who = current_user.username  # request.form["who"].strip()
 
-            if len(title) == 0 or len(snippet_text) == 0:
-                flash("Title and Sql are required fields", "error")
-                return redirect(url_for("snippet_edit", snippet_id=snippet_id))
+                if len(title) == 0 or len(snippet_text) == 0:
+                    flash("Title and Sql are required fields", "error")
+                    return redirect(url_for("snippet_edit", snippet_id=snippet_id))
 
-            db.update_snippet(snippet_id, title, snippet_text, snippet_type, tags, desc, who)
-            flash("Snippet Modified!", "success")
-            return redirect(url_for("snippet_view", snippet_id=snippet_id))
+                db.update_snippet(snippet_id, title, snippet_text, snippet_type, tags, desc, who)
+                flash("Snippet Modified!", "success")
+                return redirect(url_for("snippet_view", snippet_id=snippet_id))
 
         except Exception as e:
             print e

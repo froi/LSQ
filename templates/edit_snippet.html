@@ -9,43 +9,48 @@
       <h3 class="panel-title">Edit Snippet</h3>
     </div>
     <div class="panel-body">
-      <form method="POST" action="{{ url_for("snippet_edit", id=snippet._id) }}">
-        {{ form.csrf_token }}
+      <form method="POST" action="{{ url_for("snippet_edit", snippet_id=snippet._id) }}">
         <input type="hidden" name="id" value="{{ snippet._id }}">
-
+        {{ form.csrf_token}}
         <div class="row">
           <div class="col-md-12">
-            <input id="add-snippet-title" name="title" class="form-control" placeholder="Enter Title" type="text" value="{{ snippet.title }}">
+            {{form.title(id="add-snippet-title", class="form-control", placeholder="Enter Title")}}
+            {# <input id="add-snippet-title" name="title" class="form-control" placeholder="Enter Title" type="text" value="{{ snippet.title }}"> #}
           </div>
         </div>
         <br/>
 
         <div class="row">
           <div class="col-md-12">
-            <textarea name="sql" placeholder="Enter SQL" id="" class="form-control" name="" cols="30" rows="10">{{snippet.sql}}</textarea>
+            {{ form.code(placeholder="Enter Code", id="code", class="form-control", cols="30", rows="10")}}
+            {# <textarea name="code" placeholder="Enter Code" id="" class="form-control" name="" cols="30" rows="10">{{snippet.text}}</textarea> #}
+            
           </div>
         </div>
         <br/>
 
         <div class="row">
           <div class="col-md-12">
-            <textarea name="desc" placeholder="Description" id="" class="form-control" name="" cols="30" rows="3">{{snippet.desc}}</textarea>
+            {{ form.desc( placeholder="Description", id="desc", class="form-control", cols="30", rows="3")}}
+            {# <textarea name="desc" placeholder="Description" id="" class="form-control" name="" cols="30" rows="3">{{snippet.desc}}</textarea> #}
           </div>
         </div>
         <br/>
 
         <div class="row">
           <div class="col-md-4">
-            <input name="who" class="form-control" placeholder="Person who wrote this snippet" type="text" value="{{snippet.who}}">
+            {{ form.snippet_type(class="form-control", id="type")}}
           </div>
           <div class="col-md-5">
-            <input name="tags" class="form-control" placeholder="Enter tags (comma separated)" type="text" value="{{snippet.tags|join(", ")}}">
+            {{ form.tags(id="tags", class="form-control", placeholder="Enter tags (comma separated)")}}
+
+            {# <input name="tags" class="form-control" placeholder="Enter tags (comma separated)" type="text" value="{{snippet.tags|join(", ")}}"> #}
           </div>
           <div class="col-md-1">
             <button class="btn btn-success" type="submit">Edit</button>
           </div>
           <div class="col-md-1">
-            <a href="{{ url_for("index") }}" class="btn btn-danger" type="submit">cancel</a>
+            <a href="{{ url_for("home") }}" class="btn btn-danger" type="submit">cancel</a>
           </div>
         </div>
       </form>
