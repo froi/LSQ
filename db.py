@@ -57,6 +57,12 @@ class Comment(Document):
         'date_created': datetime,
         'date_updated': datetime,
     }
+
+    indexes = [
+        {
+            'fields': ['text', ]
+        }
+    ]
     required_fields = ['text', 'who']
     use_dot_notation = True
 
@@ -78,6 +84,12 @@ class Snippet(Document):
         'date_updated': datetime,
         'comments': [Comment]
     }
+
+    indexes = [
+        {
+            'fields': ['title', 'text', 'tags', 'desc', ]
+        }
+    ]
     required_fields = ['title', 'text', 'type', 'desc', 'who']
     use_dot_notation = True
     use_autorefs = True
@@ -198,3 +210,7 @@ def add_user(username, password, email=None, fname=None, lname=None):
     user.save()
 
     return user
+
+
+def search(search_string):
+    pass
